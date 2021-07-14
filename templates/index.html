@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
+    <h1>Catalog</h1>
     <table class="dairy-table table-hover table-info">
         <caption style="caption-side: top">
-            Университеты
-            <p style="margin-bottom: 0">Сортировка: {{ table_headers[header_id + 1] + ' ' + ('↑' if sort_up else '↓')}}</p>
+            Products (Click on header for sorting)
+            <p style="margin-bottom: 0">Sorted by: {{ table_headers[header_id] + ' ' + ('↑' if sort_up else '↓')}}</p>
         </caption>
         <tbody>
             <tr style="background-color: #86cfda">

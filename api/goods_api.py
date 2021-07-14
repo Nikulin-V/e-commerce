@@ -1,7 +1,6 @@
 import json
 
 from flask import Blueprint, request, jsonify
-from sqlalchemy import JSON
 
 from data import db_session
 from data.goods import Goods
@@ -13,7 +12,7 @@ goods_api = Blueprint('goods-api', __name__)
 
 def check_cost(cost):
     try:
-        cost = float(cost)
+        return float(cost)
     except ValueError:
         return jsonify({
             'title': 'Error',
@@ -175,7 +174,7 @@ def read_all_goods():
     else:
         GOODS_FOR_PAGE = int(GOODS_FOR_PAGE)
 
-    if len(goods) > GOODS_FOR_PAGE and len(goods) > GOODS_FOR_PAGE * page_id:
+    if len(list(goods)) > GOODS_FOR_PAGE and len(list(goods)) > GOODS_FOR_PAGE * page_id:
         goods = goods[GOODS_FOR_PAGE * page_id: GOODS_FOR_PAGE * page_id + GOODS_FOR_PAGE]
 
     g: Goods
