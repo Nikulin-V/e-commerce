@@ -1,7 +1,9 @@
 # REST API documentation
 
+### [Go to README](README.md)
+
 ### Prefix: `/api/goods`
-### Example: `https://hostname.com/api/goods`
+### Example: `https://xsolla-e-commerce.herokuapp.com/api/goods`
 
 
 ## Methods
