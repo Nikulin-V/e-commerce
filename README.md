@@ -2,7 +2,7 @@
 
 ### [Heroku site](https://xsolla-e-commerce.herokuapp.com/)
 
-### [REST API documentation](REST API.md)
+### [REST API documentation](REST_API.md)
 
 
 ### Setup:
