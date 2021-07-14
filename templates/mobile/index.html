@@ -1,24 +1,24 @@
 {% extends "mobile/base.html" %}
 {% block content %}
+    <h4 style="margin-bottom: 0">Catalog</h4>
     <table class="dairy-table table-hover table-info">
         <caption style="caption-side: top">
-            Университеты
-            <p style="margin-bottom: 0">Сортировка: {{ table_headers[header_id + 1] + ' ' + ('↑' if not sort_up else '↓')}}</p>
+            Products (Click on header for sorting)
+            <p style="margin-bottom: 0">Sorted by: {{ table_headers[header_id] + ' ' + ('↑' if sort_up else '↓')}}</p>
         </caption>
-        <tbody style="font-size: .4em">
+        <tbody style="font-size: .55em">
             <tr style="background-color: #86cfda">
                 {% for header in table_headers %}
-                    <td onclick="window.location.href= '/faculty_{{ id }}?sort_id={{ loop.index0 }}&sort_up={{ sort_up }}'" style="text-align: center">{{ header }}</td>
+                    <td onclick="window.location.href= '/index?sort_id={{ loop.index0 }}&sort_up={{ sort_up }}'" style="text-align: center">{{ header }}</td>
                 {% endfor %}
             </tr>
-            {% for id, title, city, points, budget_places_count, average_ege_points in universities_data %}
-                <tr onclick="window.location.href='/university_{{ id }}'; return false">
-                    <td style="text-align: center">{{ id }}</td>
-                    <td style="text-align: left;padding-left: 10px">{{ title }}</td>
-                    <td style="text-align: left; padding-left: 10px">{{ city }}</td>
-                    <td style="text-align:center">{{ points if points else '?'}}</td>
-                    <td style="text-align:center">{{ budget_places_count if budget_places_count else '?' }}</td>
-                    <td style="text-align:center">{{ average_ege_points if average_ege_points else '?' }}</td>
+            {% for id, sku, name, type, cost in goods_data %}
+                <tr>
+                    <td style="text-align: center; padding: 0 5px 0 5px">{{ id }}</td>
+                    <td style="text-align: left; padding: 0 5px 0 5px">{{ sku }}</td>
+                    <td style="text-align: left; padding: 0 5px 0 5px">{{ name }}</td>
+                    <td style="text-align:center; padding: 0 5px 0 5px">{{ type }}</td>
+                    <td style="text-align:center; padding: 0 5px 0 5px">{{ cost }}</td>
                 </tr>
             {% endfor %}
         </tbody>

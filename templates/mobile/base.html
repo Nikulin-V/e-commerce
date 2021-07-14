@@ -2,8 +2,6 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <script src="/static/js/yandex-metrica.js"></script>
-        <noscript><div><img src="https://mc.yandex.ru/watch/82265269" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="shortcut icon" href="static/images/Wolf.png" type="image/png">
         <link rel="stylesheet"
@@ -11,7 +9,6 @@
               integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
               crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
         <link rel="stylesheet" href="static/css/style.css">
         <link rel="stylesheet" href="static/css/mobile-header.css">
         <link rel="stylesheet" href="static/css/light-footer.css">
@@ -33,7 +30,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="\index" class="menu__item">Главная</a>
+                                <a href="\index" class="menu__item">Catalog</a>
                             </li>
                         </ul>
                 </div>
@@ -47,11 +44,7 @@
                     }
                 </style>
                 <div class="justify-content-center" style="text-align: center; display: flow-root; padding: 0 0 15px 20px">
-                    <a class="nav-item" href="/">ВУЗы</a>
-                    {% if u %}
-                        <a class="nav-item" href="{{ u.university_site_link }}" style="padding-left: 20px">Сайт</a>
-                        <a class="nav-item" href="{{ u.tabiturient_link }}" style="padding-left: 20px">Информация</a>
-                    {% endif %}
+                    <a class="nav-item" href="/">Catalog</a>
                 </div>
 
             </nav>
@@ -68,12 +61,5 @@
                 <p><small>© 2021 AREA. All Rights Reserved</small></p>
             </div>
         </footer>
-        <script src="static/js/scripts.js"></script>
-        <script src="https://use.fontawesome.com/df966d76e1.js"></script>
-        <script>
-            $(document).ready(function(){
-                $("#myModal").modal('show');
-            });
-        </script>
     </body>
 </html>
