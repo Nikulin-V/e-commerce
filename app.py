@@ -31,7 +31,11 @@ def index(template):
 
     goods = db_sess.query(Goods).all()
     g: Goods
-    goods_data = [(g.id, g.SKU, g.name, get_type_name(g.type_id), g.cost)
+    goods_data = [(g.id,
+                   g.SKU if g.SKU else '?',
+                   g.name if g.name else '?',
+                   get_type_name(g.type_id) if get_type_name(g.type_id) else '?',
+                   g.cost if g.cost else '?')
                   for g in goods]
 
     header_id, sort_up = sorting(goods_data)
