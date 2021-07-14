@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template, request
 from flask_mobility import Mobility
 from flask_mobility.decorators import mobile_template
@@ -14,9 +16,10 @@ app.register_blueprint(goods_api, url_prefix='/api')
 
 db_session.global_init('db/goods.sqlite')
 
+port = int(os.environ.get('PORT', 5000))
 
 def main():
-    app.run()
+    app.run(host='0.0.0.0', port=port)
 
 
 @app.route('/')
