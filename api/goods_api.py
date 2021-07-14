@@ -10,16 +10,6 @@ from tools import generate_id
 goods_api = Blueprint('goods-api', __name__)
 
 
-def check_cost(cost):
-    try:
-        return float(cost)
-    except ValueError:
-        return jsonify({
-            'title': 'Error',
-            'errors': [f'Cost should be a float number']
-        })
-
-
 @goods_api.route('/goods', methods=['POST'])
 def create_goods():
     """
@@ -74,6 +64,55 @@ def create_goods():
     return identifier
 
 
+@goods_api.route('/goods', methods=['PUT'])
+def update_goods():
+    """
+    Change products' info
+    URL arguments:\n
+    id - product's id\n
+    sku - product's SKU\n
+    name - product's name\n
+    type_id - id of product type\n
+    type_name - name of product name\n
+    cost (float) - product's cost
+    """
+    db_sess = db_session.create_session()
+
+    identifier = request.args.get('id')
+    sku = request.args.get('sku')
+    name = request.args.get('name')
+    type_id = get_type_id()
+    cost = request.args.get('cost')
+    check_cost(cost)
+
+    if identifier or sku:
+        goods = get_goods(db_sess, identifier, sku)
+        if goods is None:
+            return jsonify({
+                'title': 'Error',
+                'errors': [f'Product {identifier if identifier else sku} was not found']
+            })
+
+        goods: Goods
+        goods.SKU = sku if sku else goods.SKU
+        goods.name = name if name else goods.name
+        goods.type_id = type_id if type_id else goods.type_id
+        goods.cost = cost if cost else goods.cost
+
+        db_sess.merge(goods)
+        db_sess.commit()
+
+        return jsonify({
+            'title': 'Message',
+            'message': ['The product has been changed']
+        })
+
+    return jsonify({
+        'title': 'Error',
+        'errors': ['Specify the ID or SKU']
+    })
+
+
 @goods_api.route('/goods', methods=['GET'])
 def read_goods():
     """
@@ -87,6 +126,100 @@ def read_goods():
         return read_all_goods()
     else:
         return read_one_goods()
+
+
+@goods_api.route('/goods', methods=['DELETE'])
+def delete_goods():
+    """
+    Delete product
+    URL arguments:\n
+    id - product's id\n
+    sku - product's SKU
+    """
+    db_sess = db_session.create_session()
+
+    identifier = request.args.get('id')
+    sku = request.args.get('sku')
+
+    if identifier or sku:
+        goods = get_goods(db_sess, identifier, sku)
+
+        if not goods:
+            return jsonify({
+                'title': 'Error',
+                'errors': [f'Product {identifier if identifier else sku} was not found']
+            })
+
+        db_sess.delete(goods)
+        db_sess.commit()
+        return jsonify({
+            'title': 'Message',
+            'message': ['The product was deleted']
+        })
+
+    return jsonify({
+        'title': 'Error',
+        'errors': ['Specify the ID or SKU']
+    })
+
+
+def get_type_name(identifier):
+    return db_session.create_session().query(Type.name).filter(Type.id == identifier).first()[0]
+
+
+def create_type(type_name):
+    db_sess = db_session.create_session()
+
+    existing_t_ids = list(map(lambda x: x[0], db_sess.query(Type.id).all()))
+    t = Type(
+        id=generate_id(existing_t_ids),
+        name=type_name
+    )
+    db_sess.add(t)
+    db_sess.commit()
+
+    return t.id
+
+
+def get_goods(db_sess=None, identifier=None, sku=None):
+    if db_sess is None:
+        db_sess = db_session.create_session()
+
+    goods = None
+    if identifier:
+        goods = db_sess.query(Goods).get(identifier)
+    elif sku:
+        goods = db_sess.query(Goods).filter(Goods.SKU == sku).first()
+
+    return goods
+
+
+def get_type_id(type_name=None):
+    db_sess = db_session.create_session()
+    type_id = request.args.get('type_id')
+    if not type_id:
+        if type_name is None:
+            type_name = request.args.get('type_name')
+        if type_name:
+            type_id = db_sess.query(Type.id).filter(Type.name == type_name).first()
+            if type_id:
+                type_id = type_id[0]
+            else:
+                type_id = create_type(type_name)
+    elif type_id not in list(map(lambda x: x[0], db_sess.query(Type.id).all())):
+        return None
+
+    return type_id
+
+
+def check_cost(cost):
+    try:
+        return float(cost)
+    except ValueError:
+        return jsonify({
+            'title': 'Error',
+            'errors': [f'Cost should be a float number']
+        })
 
 
 def read_one_goods():
@@ -129,10 +262,10 @@ def read_all_goods():
     """
     URL arguments:\n
     page (int) - page number of catalog\n
-    count (int) - count of goods on page\n
+    count (int) - count of products on page\n
     type - type for sorting\n
-    min_cost - minimal cost for sorting\n
-    max_cost - maximal cost for sorting\n
+    min_cost - minimal cost for sorting (float)\n
+    max_cost - maximal cost for sorting (float)\n
     """
     db_sess = db_session.create_session()
 
@@ -193,131 +326,3 @@ def read_all_goods():
     }
 
     return json.dumps(response)
-
-
-@goods_api.route('/goods', methods=['PUT'])
-def update_goods():
-    """
-    Change products' info
-    URL arguments:\n
-    id - product's id\n
-    sku - product's SKU\n
-    name - product's name\n
-    type_id - id of product type\n
-    type_name - name of product name\n
-    cost (float) - product's cost
-    """
-    db_sess = db_session.create_session()
-
-    identifier = request.args.get('id')
-    sku = request.args.get('sku')
-    name = request.args.get('name')
-    type_id = get_type_id()
-    cost = request.args.get('cost')
-    check_cost(cost)
-
-    if identifier or sku:
-        goods = get_goods(identifier, sku)
-
-        goods: Goods
-        goods.SKU = sku if sku else goods.SKU
-        goods.name = name if name else goods.name
-        goods.type_id = type_id if type_id else goods.type_id
-        goods.cost = cost if cost else goods.cost
-
-        db_sess.merge(goods)
-        db_sess.commit()
-
-        return jsonify({
-            'title': 'Message',
-            'errors': ['The product has been changed']
-        })
-
-    return jsonify({
-        'title': 'Error',
-        'errors': ['Specify the ID or SKU']
-    })
-
-
-@goods_api.route('/goods', methods=['DELETE'])
-def delete_goods():
-    """
-    Delete product
-    URL arguments:\n
-    id - product's id\n
-    sku - product's SKU
-    """
-    db_sess = db_session.create_session()
-
-    identifier = request.args.get('id')
-    sku = request.args.get('sku')
-
-    if identifier or sku:
-        goods = get_goods(db_sess, identifier, sku)
-
-        if not goods:
-            return jsonify({
-                'title': 'Error',
-                'errors': [f'Product {identifier if identifier else sku} was not found']
-            })
-
-        db_sess.delete(goods)
-        db_sess.commit()
-        return jsonify({
-            'title': 'Message',
-            'errors': ['The product was deleted']
-        })
-
-    return jsonify({
-        'title': 'Error',
-        'errors': ['Specify the ID or SKU']
-    })
-
-
-def get_type_name(identifier):
-    return db_session.create_session().query(Type.name).filter(Type.id == identifier).first()[0]
-
-
-def create_type(type_name):
-    db_sess = db_session.create_session()
-
-    existing_t_ids = list(map(lambda x: x[0], db_sess.query(Type.id).all()))
-    t = Type(
-        id=generate_id(existing_t_ids),
-        name=type_name
-    )
-    db_sess.add(t)
-    db_sess.commit()
-
-    return t.id
-
-
-def get_goods(db_sess=None, identifier=None, sku=None):
-    if db_sess is None:
-        db_sess = db_session.create_session()
-
-    goods = None
-    if identifier:
-        goods = db_sess.query(Goods).get(identifier)
-    elif sku:
-        goods = db_sess.query(Goods).filter(Goods.SKU == sku).first()
-
-    return goods
-
-
-def get_type_id(type_name=None):
-    db_sess = db_session.create_session()
-    type_id = request.args.get('type_id')
-    if not type_id:
-        if type_name is None:
-            type_name = request.args.get('type_name')
-        if type_name:
-            type_id = db_sess.query(Type.id).filter(Type.name == type_name).first()
-            if type_id:
-                type_id = type_id[0]
-            else:
-                type_id = create_type(type_name)
-    elif type_id not in list(map(lambda x: x[0], db_sess.query(Type.id).all())):
-        return None
-
-    return type_id
