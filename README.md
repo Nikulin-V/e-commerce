@@ -14,4 +14,4 @@ pip install -r requirements.txt
 python3 app.py
 ```
 
-### [<a style="color: #96E8F7">My other web project</a>](https://area-146.tk)
+### [My other web project](https://area-146.tk)
