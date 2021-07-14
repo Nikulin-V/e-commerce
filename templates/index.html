@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+    <table class="dairy-table table-hover table-info">
+        <caption style="caption-side: top">
+            Университеты
+            <p style="margin-bottom: 0">Сортировка: {{ table_headers[header_id + 1] + ' ' + ('↑' if sort_up else '↓')}}</p>
+        </caption>
+        <tbody>
+            <tr style="background-color: #86cfda">
+                {% for header in table_headers %}
+                    <td onclick="window.location.href= '/index?sort_id={{ loop.index0 }}&sort_up={{ sort_up }}'" style="text-align: center">{{ header }}</td>
+                {% endfor %}
+            </tr>
+            {% for id, sku, name, type, cost in goods_data %}
+                <tr>
+                    <td style="text-align: center; padding: 0 5px 0 5px">{{ id }}</td>
+                    <td style="text-align: left;padding-left: 20px">{{ sku }}</td>
+                    <td style="text-align: left; padding-left: 20px">{{ name }}</td>
+                    <td style="text-align:center">{{ type }}</td>
+                    <td style="text-align:center">{{ cost }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

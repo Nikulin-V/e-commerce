@@ -1,0 +1,85 @@
+.navbar {
+    background-color: #86cfda;
+}
+
+#logo-header {
+    height: 40px;
+}
+
+#username {
+    background-color: white;
+    margin-right: 2px;
+}
+
+.dropdown-menu {
+    width: min-content;
+    left: auto;
+    right: 5px;
+}
+
+#sign-up-btn {
+    margin-right: 2px;
+}
+
+#sign-in-btn {
+    margin-right: 5px;
+}
+
+
+#googleBtn {
+    display: inline-block;
+    color: #fff;
+    background-color: #ffffff;
+    border-color: #17a2b8;
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px grey;
+    white-space: nowrap;
+    margin-right: 5px;
+}
+
+#googleBtn:hover {
+    background: #117A8B;
+    cursor: pointer;
+}
+
+span.label {
+    font-family: serif;
+    font-weight: normal;
+}
+
+#google-icon {
+    background: url(../images/Google.png) transparent 5px 50% no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: .375rem;
+    width: 30px;
+    height: 30px;
+}
+
+span.buttonText {
+    display: inline-block;
+    vertical-align: middle;
+    padding: .375rem .75rem .375rem 0;
+    font-size: 1rem;
+    font-weight: 400;
+    color: black;
+}
+
+.dropdown-menu {
+    text-align: center;
+}
+
+.dropdown-item:focus {
+    background-color: #17a2b8;
+    visibility: visible;
+}
+
+.nav-item {
+    color: black;
+    padding-right: 30px;
+}
+
+.nav-link {
+    color: black;
+    text-align: center;
+}
