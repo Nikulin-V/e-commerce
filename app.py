@@ -16,7 +16,7 @@ db_session.global_init('db/goods.sqlite')
 
 
 def main():
-    app.run(host='0.0.0.0', port=80)
+    app.run()
 
 
 @app.route('/')
