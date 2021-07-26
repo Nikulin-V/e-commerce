@@ -13,5 +13,3 @@ cd e-commerce
 pip install -r requirements.txt
 python3 app.py
 ```
-
-### [My other web project](https://area-146.tk)
